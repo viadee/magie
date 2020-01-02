@@ -128,7 +128,7 @@ protected void addSteps() {
 Noticeably, in the ```addSteps()```-method, several forms of ```addXYZ(...)``` and ```addXYZWithTest(...)``` are called. These add-invocations directly correspond to adding a new processing step to the pipeline. Computing these processing steps either uses the training data or the test data. They are described in the following. 
 Each kind of step is located in its own subpackage within the ```global_explanation_procedure_step```-package. The structure of an exemplary pipeline is given in the following:
 
-![An exemplary structure for an explanation pipeline](./figures/steps.png).
+![An exemplary structure for an explanation pipeline](figures/steps.png)
 
 While the order of rule optimizers, rule set optimizers, and filters can in fact vary, the explanation mapper and the explanation structurer are fixed as the first and last step correspondingly. 
 All of these steps are executed for each *individual* label, i.e., for each possible class value, in separation. That means that all steps are executed as many times as there are label values in the dataset. This ensures that descriptive rules are created for all labels and no single label dominates in generated explanations.
