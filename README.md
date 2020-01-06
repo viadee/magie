@@ -1,7 +1,7 @@
 # Model Agnostic Globally Interpretable Explanations (MAGIE, German for "magic")
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 
-This project comprises a framework for recombining different steps which generate rule-based global explanations for any black box supervised learning model. For a given model, rules of the ```IF <conditions> THEN <class-label>``` are formed, striving to describe the supervised learning model's behavior as precise, yet, as general as possible.
+This project comprises a framework for recombining different steps which generate rule-based global explanations for any black box supervised learning model. For a given model, rules in the format ```IF <conditions> THEN <class-label>``` are created, striving to describe the supervised learning model's behavior as precise, yet, as general as possible.
 It utilizes [*Roaring Bitmaps*](http://www.roaringbitmap.org/) to efficiently evaluate different optimization and filtering steps, and features a [Java-*Anchors*-implementation](https://github.com/viadee/javaAnchorExplainer) to optionally create local explanations.
 
 
@@ -150,7 +150,7 @@ Currently, a k-optimal local search for rules (```KOptimalRuleExplanationOptimiz
 
 Rule optimizers accept a ```RuleExplanationSet``` as input. If a condition, i.e., a categorical predictor feature's value, exists within one of the rules, it is added to the overall search space of the optimization procedure. This search space then can be explored to find well-performing rules. The objective function should be applicable to evaluate the quality of a rule. Currently, mutual information-based measures are utilized.
 
-![Search space creation for the optimization of rule explanations.](./figures/searchspace.png).
+![Search space creation for the optimization of rule explanations.](./figures/searchspace.png)
 
 #### Rule Set Optimization
 
