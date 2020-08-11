@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Standard implementation of a RuleExplanationSetFactory.
  */
-public class StdRuleExplanationSetFactory implements RuleExplanationSetFactory<RuleExplanationSet> {
+public class StdRuleExplanationSetFactory implements RuleExplanationSetFactory {
 
     protected final RoaringBitmapCalculator calculator;
 

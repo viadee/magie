@@ -75,7 +75,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
      * @param persistenceService The PersistenceService.
      */
     public StdExplanationPipeline(PipelineContext context,
-                                  DataSourceAdapter dataSourceAdapter,
+                                  DataSourceAdapter<T> dataSourceAdapter,
                                   BlackBoxClassifierAdapter<I> blackBoxClassifierAdapter,
                                   LocalExplainerAdapter<I> localExplainerAdapter,
                                   ExplanationVisualizer<F> explanationVisualizer,
@@ -432,6 +432,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     protected boolean validatePipelineContext(PipelineContext pipelineContext) {
+        // TODO
         return true;
     }
 

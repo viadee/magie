@@ -11,9 +11,8 @@ import java.util.Collection;
  * of factory is similar to {@link RuleExplanationFactory}.
  * The dataset of the contained RuleExplanations can differ from the dataset which is used
  * by the RuleExplanationSet for the calculation of its covers.
- * @param <RES> The contained type of RuleExplanationSet.
  */
-public interface RuleExplanationSetFactory<RES extends RuleExplanationSet> {
+public interface RuleExplanationSetFactory {
 
     /**
      * Creates a new RuleExplanationSet without any rules.
@@ -21,7 +20,7 @@ public interface RuleExplanationSetFactory<RES extends RuleExplanationSet> {
      * @param labelValue The label value to be predicted by contained rules.
      * @return The new RuleExplanationSet.
      */
-    RES newEmpty(final CategoricalFeature labelFeature,
+    RuleExplanationSet newEmpty(final CategoricalFeature labelFeature,
                  final int labelValue);
 
     /**
@@ -31,7 +30,7 @@ public interface RuleExplanationSetFactory<RES extends RuleExplanationSet> {
      * @param ruleExplanations The RuleExplanations which will be contained in the set.
      * @return The new RuleExplanationSet.
      */
-    RES newWithCollection(final CategoricalFeature labelFeature,
+    RuleExplanationSet newWithCollection(final CategoricalFeature labelFeature,
                           final int labelValue,
                           final Collection<RuleExplanation> ruleExplanations);
 
@@ -42,7 +41,7 @@ public interface RuleExplanationSetFactory<RES extends RuleExplanationSet> {
      * @param ruleExplanation The RuleExplanation which will be added.
      * @return The new RuleExplanationSet.
      */
-    RES newCopyWith(final RuleExplanationSet copyFrom,
+    RuleExplanationSet newCopyWith(final RuleExplanationSet copyFrom,
                     final RuleExplanation ruleExplanation);
 
     /**
@@ -52,7 +51,7 @@ public interface RuleExplanationSetFactory<RES extends RuleExplanationSet> {
      * @param copyFrom The RuleExplanationSet to be copied.
      * @return A, possibly adapted, RuleExplanationSet.
      */
-    RES translateWithData(RuleExplanationSet copyFrom);
+    RuleExplanationSet translateWithData(RuleExplanationSet copyFrom);
 
     /**
      * Gets the dataset which was used to calculate the covers of the RuleExplanationSet.

@@ -21,7 +21,7 @@ public class ModifiedMAGIXExplanationMapper
         implements ExplanationMapper {
 
     protected RuleExplanationFactory ruleExplanationFactory;
-    protected RuleExplanationSetFactory<?> ruleExplanationSetFactory;
+    protected RuleExplanationSetFactory ruleExplanationSetFactory;
     protected final BiFunction<Integer, RuleExplanationSet, Boolean> rowAcceptor;
     protected final Function<RuleExplanation, RuleExplanation[]> ruleBreaker;
     protected final Function<RuleExplanation, Boolean> ruleAcceptor;
@@ -100,7 +100,7 @@ public class ModifiedMAGIXExplanationMapper
      */
     public ModifiedMAGIXExplanationMapper(final LocalExplainerAdapter<?> localExplainerAdapter,
                                           final RuleExplanationFactory ruleExplanationFactory,
-                                          final RuleExplanationSetFactory<?> ruleExplanationSetFactory,
+                                          final RuleExplanationSetFactory ruleExplanationSetFactory,
                                           final BiFunction<Integer, RuleExplanationSet, Boolean> rowAcceptor,
                                           final boolean breakUpRules,
                                           final Function<RuleExplanation, Boolean> ruleAcceptor,

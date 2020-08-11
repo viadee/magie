@@ -15,7 +15,7 @@ public class MetricRuleExplanationFilter implements Postprocessor {
 
     protected final Function<RuleExplanation, Boolean> filterFunction;
     protected RuleExplanationFactory ruleExplanationFactory;
-    protected RuleExplanationSetFactory<?> ruleExplanationSetFactory;
+    protected RuleExplanationSetFactory ruleExplanationSetFactory;
 
     /**
      * Constructor for MetricRuleExplanationFilter. Filters out rules which have less coverage

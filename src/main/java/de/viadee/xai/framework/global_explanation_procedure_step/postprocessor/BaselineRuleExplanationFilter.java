@@ -21,7 +21,7 @@ public class BaselineRuleExplanationFilter implements Postprocessor {
     protected TabularDataset<?, LabelColumn.CategoricalLabelColumn> dataset;
     protected RoaringBitmapCalculator calculator;
     protected RuleExplanationFactory ruleExplanationFactory;
-    protected RuleExplanationSetFactory<?> ruleExplanationSetFactory;
+    protected RuleExplanationSetFactory ruleExplanationSetFactory;
 
     /**
      * Constructor for BaselineRuleExplanationFilter.

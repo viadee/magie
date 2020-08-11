@@ -20,7 +20,7 @@ import java.util.function.Function;
 public class RuleSetEnhancementFilter implements Postprocessor {
 
     protected RuleExplanationFactory ruleExplanationFactory;
-    protected RuleExplanationSetFactory<?> ruleExplanationSetFactory;
+    protected RuleExplanationSetFactory ruleExplanationSetFactory;
     protected final Function<RuleExplanation, Double> sortByMetricCalculation;
     protected final BiFunction<RuleExplanationSet, RuleExplanationSet, Boolean> preferNewSubsetEvaluation;
 

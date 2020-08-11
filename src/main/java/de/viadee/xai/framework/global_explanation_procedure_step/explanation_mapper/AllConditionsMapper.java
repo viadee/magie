@@ -18,7 +18,7 @@ public class AllConditionsMapper implements ExplanationMapper {
 
     protected TabularDataset<?, LabelColumn.CategoricalLabelColumn> dataset;
     protected Map<CategoricalFeature, Set<Integer>> allConditions;
-    protected RuleExplanationSetFactory<?> ruleExplanationSetFactory;
+    protected RuleExplanationSetFactory ruleExplanationSetFactory;
     protected RuleExplanationFactory ruleExplanationFactory;
 
     public RuleExplanationSet mapExplanations(int labelValue) {
@@ -49,7 +49,7 @@ public class AllConditionsMapper implements ExplanationMapper {
                     .put(cf,
                             Arrays
                                     .stream(dataset.getProcessedCol(cf))
-                                    .mapToObj(i -> i).collect(Collectors.toSet()));
+                                    .boxed().collect(Collectors.toSet()));
         }
     }
 }
