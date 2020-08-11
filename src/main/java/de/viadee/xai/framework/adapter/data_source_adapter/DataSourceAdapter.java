@@ -10,12 +10,13 @@ import de.viadee.xai.anchor.adapter.tabular.AnchorTabular;
  * adapters created for the Anchors-algorithm reusable.
  * {@link de.viadee.xai.framework.data.tabular_data.TabularDataset}
  * {@link de.viadee.xai.framework.data.tabular_data.TabularDataset.TabularDatasetBuilder}
+ * @param <T> The data type of the data which is translated to an instance of TabularDataset.
  */
-public interface DataSourceAdapter {
+public interface DataSourceAdapter<T> {
 
     /**
      * Loads data from a specific data source and transforms the data into a AnchorTabular.
      * @return The constructed AnchorTabular.
      */
-    AnchorTabular loadDataset();
+    T loadDataset();
 }

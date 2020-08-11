@@ -16,7 +16,7 @@ import de.viadee.xai.framework.persistence.explanation_persistence_service.TextE
  * Standard abstract superclass of all pipelines used in the thesis.
  */
 public abstract class AbstractStdExplanationPipeline
-        extends ExplanationPipeline<TabularInstance, String> {
+        extends ExplanationPipeline<AnchorTabular, TabularInstance, String> {
 
     /**
      * Constructor for AbstractStdExplanationPipeline.

@@ -1,6 +1,5 @@
 package de.viadee.xai.framework.explanation_pipeline;
 
-import de.viadee.xai.anchor.adapter.tabular.AnchorTabular;
 import de.viadee.xai.framework.adapter.black_box_classifier_adapter.BlackBoxClassifierAdapter;
 import de.viadee.xai.framework.adapter.data_source_adapter.DataSourceAdapter;
 import de.viadee.xai.framework.adapter.local_explainer_adapter.LocalExplainerAdapter;
@@ -27,17 +26,19 @@ import java.util.*;
 
 /**
  * The implementation of a concrete workflow, i.e., a global explanation procedure approach.
+ * @param <T> The data type of the data which is translated to an instance of TabularDataset.
  * @param <I> The chosen data type utilized by the {@link LocalExplainerAdapter}.
  * @param <F> The chosen visualization for the generated global explanation.
  */
 public abstract class ExplanationPipeline< // TODO Create interface, make this the standard template.
+        T,
         I,
         F> {
 
     protected final PersistenceService persistenceService;
     protected final PipelineContext context;
     protected final BlackBoxClassifierAdapter<I> blackBoxClassifierAdapter;
-    protected final DataSourceAdapter dataSourceAdapter;
+    protected final DataSourceAdapter<T> dataSourceAdapter;
     protected final LocalExplainerAdapter<I> localExplainerAdapter;
     protected ExplanationMapper explanationMapper;
     protected Map<Integer, Optimizer<RuleExplanation, ?, ?, ?>> ruleOptimizers = new HashMap<>();
@@ -99,11 +100,11 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @return The {@link GlobalExplanationContainer} carrying the visualization as well as the {@link RuleExplanationSet}.
      */
     public GlobalExplanationContainer<F> executePipeline() {
-        AnchorTabular anchorTabular =
+        T data =
                 dataSourceAdapter.loadDataset();
         logger.info("Data adapter loaded AnchorTabular.");
 
-        prepareDataset(anchorTabular);
+        prepareDataset(data);
         logger.info("Data set was prepared.");
 
         splitData();
@@ -193,7 +194,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The postprocesor.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> add(Postprocessor toAdd) {
+    public ExplanationPipeline<T, I, F> add(Postprocessor toAdd) {
         return add(toAdd, false);
     }
 
@@ -202,7 +203,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The rule optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd) {
         return addRuleOptimizer(toAdd, false);
     }
@@ -212,7 +213,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The rule set optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd) {
         return addRuleSetOptimizer(toAdd, false);
     }
@@ -222,7 +223,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The explanation mapper.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> add(ExplanationMapper toAdd) {
+    public ExplanationPipeline<T, I, F> add(ExplanationMapper toAdd) {
         return add(toAdd, false);
     }
 
@@ -231,7 +232,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The explanation structurer
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> add(ExplanationStructurer toAdd) {
+    public ExplanationPipeline<T, I, F> add(ExplanationStructurer toAdd) {
         this.explanationStructurer = toAdd;
         return this;
     }
@@ -242,7 +243,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> add(Postprocessor toAdd, boolean store) {
+    public ExplanationPipeline<T, I, F> add(Postprocessor toAdd, boolean store) {
         initializeStep(toAdd, false, false, store, stepCount);
         this.postprocessors.put(stepCount, toAdd);
         stepCount++;
@@ -255,7 +256,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store) {
         initializeOptimizationStep(toAdd, store, stepCount, ruleExplanationSetFactoryTraining, ruleExplanationSetFactoryTraining);
         this.ruleSetOptimizers.put(stepCount, toAdd);
@@ -269,7 +270,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store) {
         initializeOptimizationStep(toAdd, store, stepCount, countingRuleExplanationFactoryTraining, ruleExplanationSetFactoryTraining);
         this.ruleOptimizers.put(stepCount, toAdd);
@@ -283,7 +284,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> add(ExplanationMapper toAdd, boolean store) {
+    public ExplanationPipeline<T, I, F> add(ExplanationMapper toAdd, boolean store) {
         initializeStep(toAdd, false, true, store, STORE_FOR_MAPPER);
         this.explanationMapper = toAdd;
         this.explanationMapper.setLocalExplainer(localExplainerAdapter);
@@ -296,7 +297,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The postprocessor.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> addWithTest(Postprocessor toAdd) {
+    public ExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd) {
         return addWithTest(toAdd, false);
     }
 
@@ -306,7 +307,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The rule optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd) {
         return addRuleOptimizerWithTest(toAdd, false);
     }
@@ -317,7 +318,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The rule set optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd) {
         return addRuleSetOptimizerWithTest(toAdd, false);
     }
@@ -328,7 +329,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param toAdd The explanation mapper.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd) {
+    public ExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd) {
         return addWithTest(toAdd, false);
     }
 
@@ -340,7 +341,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> addWithTest(Postprocessor toAdd, boolean store) {
+    public ExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd, boolean store) {
         checkTestExists();
         initializeStep(toAdd, true, false, store, stepCount);
         this.postprocessors.put(stepCount, toAdd);
@@ -355,7 +356,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store) {
         checkTestExists();
         initializeOptimizationStep(toAdd, store, stepCount, ruleExplanationSetFactoryTest, ruleExplanationSetFactoryTest);
@@ -371,7 +372,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F>
+    public ExplanationPipeline<T, I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store) {
         checkTestExists();
         initializeOptimizationStep(toAdd, store, stepCount, countingRuleExplanationFactoryTest, ruleExplanationSetFactoryTest);
@@ -387,7 +388,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    public ExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd, boolean store) {
+    public ExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd, boolean store) {
         checkTestExists();
         initializeStep(toAdd, true, true, store, stepCount);
         this.explanationMapper = toAdd;
@@ -524,7 +525,7 @@ public abstract class ExplanationPipeline< // TODO Create interface, make this t
         return true;
     }
 
-    protected abstract void prepareDataset(AnchorTabular anchorTabular);
+    protected abstract void prepareDataset(T data);
 
     protected void splitData() {}
 
