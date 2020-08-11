@@ -16,7 +16,7 @@ import de.viadee.xai.framework.persistence.explanation_persistence_service.TextE
  * Standard abstract superclass of all pipelines used in the thesis.
  */
 public abstract class AbstractStdExplanationPipeline
-        extends ExplanationPipeline<AnchorTabular, TabularInstance, String> {
+        extends StdExplanationPipeline<AnchorTabular, TabularInstance, String> {
 
     /**
      * Constructor for AbstractStdExplanationPipeline.
@@ -25,7 +25,7 @@ public abstract class AbstractStdExplanationPipeline
      * @param localExplainer The LocalExplainer.
      * @param explanationPersistenceDescriptor The data set name.
      */
-    public AbstractStdExplanationPipeline(DataSourceAdapter dataSourceAdapter,
+    public AbstractStdExplanationPipeline(DataSourceAdapter<AnchorTabular> dataSourceAdapter,
                                           BlackBoxClassifierAdapter<TabularInstance> blackBoxClassifierAdapter,
                                           LocalExplainerAdapter<TabularInstance> localExplainer,
                                           String explanationPersistenceDescriptor) {

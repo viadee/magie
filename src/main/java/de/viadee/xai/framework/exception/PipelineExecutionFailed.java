@@ -1,7 +1,9 @@
 package de.viadee.xai.framework.exception;
 
+import de.viadee.xai.framework.explanation_pipeline.ExplanationPipeline;
+
 /**
- * RuntimeException to be thrown if the {@link de.viadee.xai.framework.explanation_pipeline.ExplanationPipeline}
+ * RuntimeException to be thrown if the {@link ExplanationPipeline}
  * fails to be executed.
  */
 public class PipelineExecutionFailed extends RuntimeException {

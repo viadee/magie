@@ -3,7 +3,7 @@ package de.viadee.xai.framework.explanation_pipeline;
 import java.util.Map;
 
 /**
- * The container carrying the result of invoking {@link ExplanationPipeline#executePipeline()}.
+ * The container carrying the result of invoking {@link StdExplanationPipeline#executePipeline()}.
  * @param <I> The chosen format for the generated global explanation.
  */
 public class GlobalExplanationContainer<I> {

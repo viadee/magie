@@ -5,6 +5,7 @@ import de.viadee.xai.framework.data.tabular_data.LabelColumn.CategoricalLabelCol
 import de.viadee.xai.framework.data.tabular_data.TabularDataset;
 import de.viadee.xai.framework.explanation_calculation.calculator.RoaringBitmapCalculator;
 import de.viadee.xai.framework.explanation_calculation.explanation.RuleExplanationSet;
+import de.viadee.xai.framework.explanation_pipeline.ExplanationPipeline;
 import de.viadee.xai.framework.persistence.calculator_persistence_service.CalculatorPersistenceService;
 import de.viadee.xai.framework.persistence.calculator_persistence_service.NullCalculatorPersister;
 import de.viadee.xai.framework.persistence.data_persistence_service.DataPersistenceService;
@@ -94,7 +95,7 @@ public class PersistenceService { // TODO Setup persistence if at least one set 
 
     /**
      * Loads multiple {@link RuleExplanationSet}s with different labels. They must exhibit different labels as
-     * otherwise, they cannot be further processed unambiguously. This is because {@link de.viadee.xai.framework.explanation_pipeline.ExplanationPipeline}s
+     * otherwise, they cannot be further processed unambiguously. This is because {@link ExplanationPipeline}s
      * are executed in a per-label fashion.
      * @param ids The IDs of {@link RuleExplanationSet} which necessarily must have different labels.
      * @return The set of {@link RuleExplanationSet}s.
