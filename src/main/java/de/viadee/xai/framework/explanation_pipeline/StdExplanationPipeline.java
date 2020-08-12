@@ -1,5 +1,6 @@
 package de.viadee.xai.framework.explanation_pipeline;
 
+import de.viadee.xai.anchor.adapter.tabular.AnchorTabular;
 import de.viadee.xai.framework.adapter.black_box_classifier_adapter.BlackBoxClassifierAdapter;
 import de.viadee.xai.framework.adapter.data_source_adapter.DataSourceAdapter;
 import de.viadee.xai.framework.adapter.local_explainer_adapter.LocalExplainerAdapter;
@@ -26,16 +27,15 @@ import java.util.*;
 
 /**
  * The implementation of a concrete workflow, i.e., a global explanation procedure approach.
- * @param <T> The data type of the data which is translated to an instance of TabularDataset.
  * @param <I> The chosen data type utilized by the {@link LocalExplainerAdapter}.
  * @param <F> The chosen visualization for the generated global explanation.
  */
-public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipeline<T, I, F> {
+public abstract class StdExplanationPipeline<I, F> implements ExplanationPipeline<I, F> {
 
     protected final PersistenceService persistenceService;
     protected final PipelineContext context;
     protected final BlackBoxClassifierAdapter<I> blackBoxClassifierAdapter;
-    protected final DataSourceAdapter<T> dataSourceAdapter;
+    protected final DataSourceAdapter dataSourceAdapter;
     protected final LocalExplainerAdapter<I> localExplainerAdapter;
     protected ExplanationMapper explanationMapper;
     protected Map<Integer, Optimizer<RuleExplanation, ?, ?, ?>> ruleOptimizers = new HashMap<>();
@@ -75,7 +75,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
      * @param persistenceService The PersistenceService.
      */
     public StdExplanationPipeline(PipelineContext context,
-                                  DataSourceAdapter<T> dataSourceAdapter,
+                                  DataSourceAdapter dataSourceAdapter,
                                   BlackBoxClassifierAdapter<I> blackBoxClassifierAdapter,
                                   LocalExplainerAdapter<I> localExplainerAdapter,
                                   ExplanationVisualizer<F> explanationVisualizer,
@@ -94,8 +94,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
 
     @Override
     public GlobalExplanationContainer<F> executePipeline() {
-        T data =
-                dataSourceAdapter.loadDataset();
+        AnchorTabular data = loadDataset();
         logger.info("Data adapter loaded AnchorTabular.");
 
         prepareDataset(data);
@@ -175,6 +174,10 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
         // TODO
     }
 
+    protected AnchorTabular loadDataset() {
+        return dataSourceAdapter.loadDataset();
+    }
+
     protected Map<Integer, Map<Integer, Integer>> persistExplanations() {
         Map<Integer, Map<Integer, Integer>> labelToStepIds = new HashMap<>();
         for (Map.Entry<Integer, List<RuleExplanationSet>> entry : storedResultsForSteps.entrySet()) {
@@ -184,35 +187,35 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> add(Postprocessor toAdd) {
+    public StdExplanationPipeline<I, F> add(Postprocessor toAdd) {
         return add(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd) {
         return addRuleOptimizer(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd) {
         return addRuleSetOptimizer(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> add(ExplanationMapper toAdd) {
+    public StdExplanationPipeline<I, F> add(ExplanationMapper toAdd) {
         return add(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> add(ExplanationStructurer toAdd) {
+    public StdExplanationPipeline<I, F> add(ExplanationStructurer toAdd) {
         this.explanationStructurer = toAdd;
         return this;
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> add(Postprocessor toAdd, boolean store) {
+    public StdExplanationPipeline<I, F> add(Postprocessor toAdd, boolean store) {
         initializeStep(toAdd, false, false, store, stepCount);
         this.postprocessors.put(stepCount, toAdd);
         stepCount++;
@@ -220,7 +223,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store) {
         initializeOptimizationStep(toAdd, store, stepCount, ruleExplanationSetFactoryTraining, ruleExplanationSetFactoryTraining);
         this.ruleSetOptimizers.put(stepCount, toAdd);
@@ -229,7 +232,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store) {
         initializeOptimizationStep(toAdd, store, stepCount, countingRuleExplanationFactoryTraining, ruleExplanationSetFactoryTraining);
         this.ruleOptimizers.put(stepCount, toAdd);
@@ -238,7 +241,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> add(ExplanationMapper toAdd, boolean store) {
+    public StdExplanationPipeline<I, F> add(ExplanationMapper toAdd, boolean store) {
         initializeStep(toAdd, false, true, store, STORE_FOR_MAPPER);
         this.explanationMapper = toAdd;
         this.explanationMapper.setLocalExplainer(localExplainerAdapter);
@@ -246,30 +249,30 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd) {
+    public StdExplanationPipeline<I, F> addWithTest(Postprocessor toAdd) {
         return addWithTest(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd) {
         return addRuleOptimizerWithTest(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd) {
         return addRuleSetOptimizerWithTest(toAdd, false);
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd) {
+    public StdExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd) {
         return addWithTest(toAdd, false);
     }
 
 
     @Override
-    public StdExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd, boolean store) {
+    public StdExplanationPipeline<I, F> addWithTest(Postprocessor toAdd, boolean store) {
         checkTestExists();
         initializeStep(toAdd, true, false, store, stepCount);
         this.postprocessors.put(stepCount, toAdd);
@@ -278,7 +281,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store) {
         checkTestExists();
         initializeOptimizationStep(toAdd, store, stepCount, ruleExplanationSetFactoryTest, ruleExplanationSetFactoryTest);
@@ -288,7 +291,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F>
+    public StdExplanationPipeline<I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store) {
         checkTestExists();
         initializeOptimizationStep(toAdd, store, stepCount, countingRuleExplanationFactoryTest, ruleExplanationSetFactoryTest);
@@ -298,7 +301,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
     }
 
     @Override
-    public StdExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd, boolean store) {
+    public StdExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd, boolean store) {
         checkTestExists();
         initializeStep(toAdd, true, true, store, stepCount);
         this.explanationMapper = toAdd;
@@ -436,7 +439,7 @@ public abstract class StdExplanationPipeline<T, I, F> implements ExplanationPipe
         return true;
     }
 
-    protected abstract void prepareDataset(T data);
+    protected abstract void prepareDataset(AnchorTabular data);
 
     protected void splitData() {}
 

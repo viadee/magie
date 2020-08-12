@@ -10,7 +10,6 @@ import de.viadee.xai.framework.global_explanation_procedure_step.optimizer.Optim
 import de.viadee.xai.framework.global_explanation_procedure_step.postprocessor.Postprocessor;
 
 public interface ExplanationPipeline<
-        T,
         I,
         F> {
 
@@ -25,21 +24,21 @@ public interface ExplanationPipeline<
      * @param toAdd The rule optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd);
+    ExplanationPipeline<I, F> addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd);
 
     /**
      * Adds a postprocessor to the pipeline.
      * @param toAdd The postprocesor.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> add(Postprocessor toAdd);
+    ExplanationPipeline<I, F> add(Postprocessor toAdd);
 
     /**
      * Adds a rule set optimizer to the pipeline.
      * @param toAdd The rule set optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd);
 
     /**
@@ -47,14 +46,14 @@ public interface ExplanationPipeline<
      * @param toAdd The explanation mapper.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> add(ExplanationMapper toAdd);
+    ExplanationPipeline<I, F> add(ExplanationMapper toAdd);
 
     /**
      * Adds the explanation structurer to the pipeline.
      * @param toAdd The explanation structurer
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> add(ExplanationStructurer toAdd);
+    ExplanationPipeline<I, F> add(ExplanationStructurer toAdd);
 
     /**
      * Adds a postprocessor to the pipeline. Possibly, declares the output of this step to be persisted.
@@ -62,7 +61,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> add(Postprocessor toAdd, boolean store);
+    ExplanationPipeline<I, F> add(Postprocessor toAdd, boolean store);
 
     /**
      * Adds a rule set optimizer to the pipeline. Possibly, declares the output of this step to be persisted.
@@ -70,7 +69,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleSetOptimizer(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store);
 
 
@@ -80,7 +79,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleOptimizer(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store);
 
     /**
@@ -89,7 +88,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> add(ExplanationMapper toAdd, boolean store);
+    ExplanationPipeline<I, F> add(ExplanationMapper toAdd, boolean store);
 
     /**
      * Adds a postprocessor to the pipeline.
@@ -97,7 +96,7 @@ public interface ExplanationPipeline<
      * @param toAdd The postprocessor.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd);
+    ExplanationPipeline<I, F> addWithTest(Postprocessor toAdd);
 
     /**
      * Adds a rule optimizer to the pipeline.
@@ -105,7 +104,7 @@ public interface ExplanationPipeline<
      * @param toAdd The rule optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd);
 
     /**
@@ -114,7 +113,7 @@ public interface ExplanationPipeline<
      * @param toAdd The rule set optimizer.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd);
 
     /**
@@ -123,7 +122,7 @@ public interface ExplanationPipeline<
      * @param toAdd The explanation mapper.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd);
+    ExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd);
 
     /**
      * Adds a postprocessor to the pipeline. Possibly, declares the output of this step to be persisted.
@@ -132,7 +131,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> addWithTest(Postprocessor toAdd, boolean store);
+    ExplanationPipeline<I, F> addWithTest(Postprocessor toAdd, boolean store);
 
     /**
      * Adds a rule set optimizer to the pipeline. Possibly, declares the output of this step to be persisted.
@@ -141,7 +140,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleSetOptimizerWithTest(Optimizer<RuleExplanationSet, RuleExplanationSetFactory, ?, ?> toAdd, boolean store);
 
     /**
@@ -151,7 +150,7 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F>
+    ExplanationPipeline<I, F>
     addRuleOptimizerWithTest(Optimizer<RuleExplanation, RuleExplanationFactory, ?, ?> toAdd, boolean store);
 
     /**
@@ -161,6 +160,6 @@ public interface ExplanationPipeline<
      * @param store If true, the step's result is persisted.
      * @return The ExplanationPipeline for chaining.
      */
-    ExplanationPipeline<T, I, F> addWithTest(ExplanationMapper toAdd, boolean store);
+    ExplanationPipeline<I, F> addWithTest(ExplanationMapper toAdd, boolean store);
 
 }

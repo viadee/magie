@@ -5,9 +5,6 @@ import de.viadee.xai.anchor.adapter.tabular.column.DoubleColumn;
 import de.viadee.xai.anchor.adapter.tabular.column.IntegerColumn;
 import de.viadee.xai.framework.adapter.data_source_adapter.NullDataAdapter;
 import de.viadee.xai.framework.explanation_pipeline.AbstractStdExplanationPipeline;
-import de.viadee.xai.framework.explanation_pipeline.exemplary_pipeline.DirectKOptMining;
-import de.viadee.xai.framework.explanation_pipeline.exemplary_pipeline.DirectMemeticMining;
-import de.viadee.xai.framework.explanation_pipeline.exemplary_pipeline.ReorderedKOptSetOptimization;
 import de.viadee.xai.framework.explanation_pipeline.exemplary_pipeline.ReorderedMAGIX;
 
 /**

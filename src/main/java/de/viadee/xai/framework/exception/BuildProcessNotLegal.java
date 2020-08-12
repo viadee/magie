@@ -9,6 +9,6 @@ public class BuildProcessNotLegal extends RuntimeException {
      * @param reason The String containing the reason.
      */
     public BuildProcessNotLegal(String reason) {
-        super("The build process has been found to be illegal: " + reason + ".");
+        super("The build process has been found to be illegal: " + reason);
     }
 }

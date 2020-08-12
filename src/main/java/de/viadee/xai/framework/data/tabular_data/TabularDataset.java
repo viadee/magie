@@ -430,7 +430,7 @@ public class TabularDataset<
             Class<PL> labelFeatureTypeOfExplainerData,
             AnchorTabular anchorTabular) {
 
-        return new TabularDatasetBuilder(
+        return new TabularDatasetBuilder<>(
                 labelFeatureTypeOfLoadedData,
                 labelFeatureTypeOfBlackBoxFunction,
                 labelFeatureTypeOfExplainerData,
@@ -526,8 +526,8 @@ public class TabularDataset<
                 LabelColumn.CategoricalLabelColumn,
                 PL> withBlackboxDataDiscretizer(Discretizer<LabelColumn.NumericLabelColumn, LabelColumn.CategoricalLabelColumn> discretizerForBlackboxData) {
 
-            if (!((labelFeatureTypeOfLoadedData.equals(NumericFeature.class)) &&
-                    (labelFeatureTypeOfBlackBoxFunction.equals(CategoricalFeature.class)))) {
+            if (!((labelFeatureTypeOfLoadedData.equals(LabelColumn.NumericLabelColumn.class)) &&
+                    (labelFeatureTypeOfBlackBoxFunction.equals(LabelColumn.CategoricalLabelColumn.class)))) {
                 throw new LabelTypeDiscretizationNotLegal();
             } else {
                 this.discretizerForBlackboxData = (Discretizer<LL, LabelColumn.CategoricalLabelColumn>) discretizerForBlackboxData;
